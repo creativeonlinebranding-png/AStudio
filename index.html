@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+
+<title>1Africa Radio TV - Live</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --gold: #ffd700;
+    --gold-dark: #c49a00;
+    --black: #080808;
+    --panel: rgba(8,8,8,0.30);
+    --white: #ffffff;
+    --muted: #c5c5c5;
+    --border: rgba(255,215,0,0.35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: auto;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: var(--white);
+    background: var(--black);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ORIGINAL BACKGROUND PICTURES */
+
+.background-grid {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    z-index: -2;
+}
+
+.background-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+}
+
+.background-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: rgba(0,0,0,0.22);
+    pointer-events: none;
+}
+
+/* HEADER */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.96);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+}
+
+.header-inner {
+    max-width: 1250px;
+    min-height: 76px;
+    padding: 14px 22px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.logo {
+    color: var(--gold);
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+}
+
+.logo small {
+    display: block;
+    color: #dedede;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    margin-top: 4px;
+}
+
+.menu-toggle {
+    width: 45px;
+    height: 43px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--gold);
+    background: #111;
+    font-size: 25px;
+    cursor: pointer;
+    display: none;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+nav a {
+    color: #f1f1f1;
+    text-decoration: none;
+    padding: 10px 11px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+nav a:hover,
+nav a:focus {
+    color: var(--gold);
+    background: rgba(255,215,0,0.09);
+}
+
+/* GENERAL SECTIONS */
+
+section {
+    scroll-margin-top: 100px;
+}
+
+.content-section {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 32px 25px;
+    background: rgba(8,8,8,0.30);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+.section-heading {
+    color: var(--gold);
+    font-size: 27px;
+    margin: 0 0 12px;
+}
+
+.section-description {
+    color: #dedede;
+    max-width: 750px;
+    margin: 0 auto 22px;
+    font-size: 13px;
+}
+
+/* RADIO PLAYER */
+
+.radio-box {
+    background: rgba(0,0,0,0.72);
+    padding: 28px 20px;
+    border-radius: 22px;
+    max-width: 520px;
+    margin: 30px auto 40px;
+    border: 1px solid rgba(255,215,0,0.55);
+    box-shadow: 0 0 20px rgba(230,126,0,0.15);
+    text-align: center;
+}
+
+.radio-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+#digital-clock {
+    font-size: 30px;
+    color: var(--gold);
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.now-playing {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.dot {
+    height: 9px;
+    width: 9px;
+    background-color: #ff3030;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#now-meta {
+    font-size: 12px;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+.up-next {
+    font-size: 12px;
+    color: #ddd;
+    margin: 12px 0 18px;
+}
+
+.up-next strong {
+    color: var(--gold);
+}
+
+#now-hosts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.mini-host {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 11px;
+}
+
+.mini-host img {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--gold);
+}
+
+.radio-button {
+    width: 59px;
+    height: 59px;
+    border-radius: 50%;
+    font-size: 22px;
+    font-weight: bold;
+    color: black;
+    background: linear-gradient(145deg,#ffe96a,#d5a900);
+    border: 2px solid var(--gold);
+    cursor: pointer;
+    margin: 10px;
+    box-shadow: 0 4px 12px rgba(255,215,0,0.15);
+}
+
+.radio-button.stop {
+    background: #181818;
+    color: var(--gold);
+}
+
+.volume-control {
+    margin-top: 15px;
+}
+
+.volume-control label {
+    font-size: 12px;
+    color: var(--gold);
+}
+
+.volume-control input {
+    width: 70%;
+    accent-color: var(--gold);
+    margin-top: 10px;
+}
+
+.player-status {
+    min-height: 20px;
+    color: #bbb;
+    font-size: 11px;
+    margin-top: 8px;
+}
+
+/* RADIO RECORDING CONTROLS */
+
+.recording-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 24px auto 10px;
+    max-width: 320px;
+}
+
+.recording-controls button {
+    width: 100%;
+    min-height: 46px;
+    padding: 13px 16px;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    background: rgba(0,0,0,0.65);
+    color: var(--gold);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.recording-controls button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.recording-controls #recordButton {
+    border-color: #ff4040;
+    color: #ffffff;
+    background: rgba(90,0,0,0.65);
+}
+
+.recording-controls #stopRecordingButton {
+    border-color: rgba(255,215,0,0.55);
+}
+
+#recordingStatus {
+    min-height: 20px;
+    color: #ffffff;
+    font-size: 12px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+#savedRecordings {
+    width: 100%;
+    margin-top: 8px;
+    text-align: left;
+}
+
+.saved-recording {
+    padding: 12px;
+    margin-top: 10px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+}
+
+.saved-recording audio {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.saved-recording a {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--gold);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+/* SCHEDULE */
+
+#schedule {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    gap: 15px;
+    margin-top: 24px;
+    text-align: left;
+}
+
+.schedule-card {
+    background: rgba(0,0,0,0.30);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 17px;
+}
+
+.schedule-card.live {
+    border: 2px solid #ff3a3a;
+    background: rgba(0,0,0,0.42);
+}
+
+.schedule-card div {
+    margin-bottom: 6px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.schedule-card .show-title {
+    color: var(--gold);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.live-label {
+    display: inline-block;
+    background: #d40000;
+    color: white;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* INFORMATION SECTIONS */
+
+.content-section p {
+    color: #e1e1e1;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.content-section strong {
+    color: var(--gold);
+}
+
+#office a {
+    color: var(--gold);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+#office a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background: rgba(0,0,0,0.95);
+    border-top: 1px solid var(--border);
+    padding: 22px 15px;
+    text-align: center;
+    color: #aaa;
+    font-size: 11px;
+}
+
+footer span {
+    color: var(--gold);
+}
+
+/* MOBILE NAVIGATION */
+
+@media (max-width: 850px) {
+    .header-inner {
+        flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 3px;
+        padding: 10px 0 5px;
+    }
+
+    nav.open {
+        display: flex;
+    }
+
+    nav a {
+        padding: 12px 14px;
+        background: rgba(255,255,255,0.035);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 13px;
+    }
+
+    .header-inner {
+        padding: 13px 17px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .content-section {
+        margin: 22px 12px;
+        padding: 25px 16px;
+        background: rgba(8,8,8,0.30);
+    }
+
+    .section-heading {
+        font-size: 23px;
+    }
+
+    #schedule {
+        grid-template-columns: 1fr;
+    }
+
+    .radio-box {
+        margin: 24px 12px 30px;
+        padding: 24px 13px;
+    }
+
+    .recording-controls {
+        width: 100%;
+        max-width: 320px;
+    }
+}
+
+@media (min-width: 851px) {
+    nav {
+        display: flex !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ORIGINAL BACKGROUND IMAGES PRESERVED -->
+
+<div class="background-grid" aria-hidden="true">
+    <img src="https://i.postimg.cc/wy57X3tV/IMG-20250701-WA0013-1.jpg" alt="">
+    <img src="https://i.postimg.cc/FdXYk0Kz/IMG-20250701-WA0016.jpg" alt="">
+    <img src="https://i.postimg.cc/1gqgzvsb/IMG-20250701-WA0020.jpg" alt="">
+    <img src="https://i.postimg.cc/t72gpKFY/IMG-20250701-WA0019.jpg" alt="">
+</div>
+
+<div class="background-overlay" aria-hidden="true"></div>
+
+<header>
+    <div class="header-inner">
+
+        <div class="logo">
+            1Africa Radio TV
+            <small>AFRICA, WE ARE ONE</small>
+        </div>
+
+        <button
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mainNav"
+            onclick="toggleMenu()">☰</button>
+
+        <nav id="mainNav">
+            <a href="#radio">Live Radio</a>
+            <a href="#one-africa-live">Schedule</a>
+            <a href="#vision">Vision</a>
+            <a href="#mission">Mission</a>
+            <a href="#history">History</a>
+            <a href="#office">Contact</a>
+        </nav>
+
+    </div>
+</header>
+
+<!-- LIVE RADIO PLAYER -->
+
+<div class="radio-box" id="radio">
+
+    <div class="radio-label">LIVE BROADCAST</div>
+
+    <div id="digital-clock">00:00:00</div>
+
+    <div class="now-playing" id="now-playing-container">
+        📻 NOW PLAYING:
+        <span id="now-title">Africa Good Music</span>
+        <span class="dot"></span>
+    </div>
+
+    <div id="now-meta"></div>
+
+    <div class="up-next">
+        <strong>UP NEXT:</strong>
+        <span id="next-title">Checking schedule...</span>
+    </div>
+
+    <div id="now-hosts"></div>
+
+    <button
+        onclick="playRadio()"
+        class="radio-button"
+        aria-label="Play radio">▶</button>
+
+    <button
+        onclick="stopRadio()"
+        class="radio-button stop"
+        aria-label="Stop radio">■</button>
+
+    <div class="volume-control">
+        <label for="volumeSlider">🔊 VOLUME</label><br>
+
+        <input
+            id="volumeSlider"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+            oninput="adjustVolume(this.value)">
+    </div>
+
+    <div class="player-status" id="playerStatus" aria-live="polite">
+        Ready to connect to the live broadcast.
+    </div>
+
+    <!-- RECORDING CONTROLS -->
+
+    <div class="recording-controls">
+
+        <button
+            type="button"
+            id="recordButton"
+            onclick="startRadioRecording()">
+            ● Record Live Radio
+        </button>
+
+        <button
+            type="button"
+            id="stopRecordingButton"
+            onclick="stopRadioRecording()"
+            disabled>
+            ■ Stop Recording
+        </button>
+
+        <div id="recordingStatus" role="status" aria-live="polite">
+            Recording is stopped.
+        </div>
+
+        <button
+            type="button"
+            id="savedRecordingsButton"
+            onclick="openSavedRecordings()">
+            My Recordings
+        </button>
+
+        <div id="savedRecordings" hidden></div>
+
+    </div>
+
+    <audio id="radio-audio" preload="none" playsinline>
+        <source
+            src="https://radio3.eclipse-streaming.co.za/listen/1africaradio/radio.mp3"
+            type="audio/mpeg">
+
+        Your browser does not support the audio element.
+    </audio>
+
+</div>
+
+<!-- SHOW SCHEDULE -->
+
+<section id="one-africa-live" class="content-section">
+
+    <h2 class="section-heading">Live Shows &amp; Weekly Schedule</h2>
+
+    <p class="section-description">
+        Discover the programmes, voices and stories bringing Africa together.
+        Shows are highlighted when they are scheduled to be live.
+    </p>
+
+    <div id="schedule"></div>
+
+</section>
+
+<!-- VISION -->
+
+<section id="vision" class="content-section">
+
+    <h2 class="section-heading">Vision Statement</h2>
+
+    <p>
+        1Africa Radio TV is a multi-lingual mass communication platform where
+        radio and television meet and work together to create Pan-African content.
+        It is aimed at rebuilding the African brand from the failures of the past
+        to the emergent new Africa of today—one that is fearless, mentally
+        liberated, focused, goal-driven, and free to be who they want to be.
+        One of our main aims is to tell the new Africa story to the world and
+        bring Africa together. We are the gateway to the world; hence, we call
+        ourselves “Africa Embassy.”
+        <br><br>
+        <strong>Our Motto: “Africa, we are one.”</strong>
+    </p>
+
+</section>
+
+<!-- MISSION -->
+
+<section id="mission" class="content-section">
+
+    <h2 class="section-heading">Mission Statement</h2>
+
+    <p>
+        1Africa Radio TV’s mission is to empower the African child and the
+        underprivileged young generation with skill sets, empowerment, and
+        upliftment through quality teaching. Our main mission is to bridge
+        the gap between education and employment by equipping young individuals
+        with practical, in-demand skills needed for success in today’s dynamic
+        job market.
+    </p>
+
+</section>
+
+<!-- HISTORY -->
+
+<section id="history" class="content-section">
+
+    <h2 class="section-heading">1Africa Radio TV Company History</h2>
+
+    <p>
+        Founded in 2018, 1Africa Radio TV emerged as a pioneering Pan-African
+        multimedia platform dedicated to celebrating African culture, music,
+        and storytelling. Starting as a single radio station in Johannesburg,
+        we have grown into a continental network reaching 22 African nations.
+        Our journey includes launching the first cross-border music chart show
+        in 2020, establishing digital studios in four countries, and becoming
+        the official media partner for the African Continental Free Trade Area
+        in 2023.
+    </p>
+
+</section>
+
+<!-- CONTACT -->
+
+<section id="office" class="content-section">
+
+    <h2 class="section-heading">Contact &amp; Address</h2>
+
+    <p>
+        <strong>Address:</strong><br>
+        28 Melle Street, Braamfontein, Johannesburg
+    </p>
+
+    <p>
+        <strong>Phone:</strong><br>
+        +27 11 433 0211<br>
+        +27 78 934 9311<br>
+        +27 83 471 2288
+    </p>
+
+    <p>
+        <strong>Email Contacts:</strong><br>
+        <a href="mailto:info@1africaradiotv.com">info@1africaradiotv.com</a><br>
+        <a href="mailto:ceo@1africaradiotv.com">ceo@1africaradiotv.com</a><br>
+        <a href="mailto:MD@1africaradiotv.com">MD@1africaradiotv.com</a><br>
+        <a href="mailto:stationmanager@1africaradiotv.com">stationmanager@1africaradiotv.com</a><br>
+        <a href="mailto:News@1africaradiotv.com">News@1africaradiotv.com</a><br>
+        <a href="mailto:MusicSubmissions@1africaradiotv.com">MusicSubmissions@1africaradiotv.com</a><br>
+        <a href="mailto:Sports@1africaradiotv.com">Sports@1africaradiotv.com</a><br>
+        <a href="mailto:Socialmedia@1africaradiotv.com">Socialmedia@1africaradiotv.com</a><br>
+        <a href="mailto:Advertising@1africaradiotv.com">Advertising@1africaradiotv.com</a><br>
+        <a href="mailto:Marketing@1africaradiotv.com">Marketing@1africaradiotv.com</a><br>
+        <a href="mailto:Sponsoring@1africaradiotv.com">Sponsoring@1africaradiotv.com</a>
+    </p>
+
+</section>
+
+<footer>
+    <span>1Africa Radio TV</span> · Africa, we are one.
+</footer>
+
+<script>
+/* NAVIGATION */
+
+function toggleMenu() {
+    const nav = document.getElementById("mainNav");
+    const button = document.getElementById("menuToggle");
+    const isOpen = nav.classList.toggle("open");
+
+    button.textContent = isOpen ? "✕" : "☰";
+
+    button.setAttribute("aria-expanded", String(isOpen));
+
+    button.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+    );
+}
+
+document.querySelectorAll("#mainNav a").forEach(link => {
+    link.addEventListener("click", () => {
+        const nav = document.getElementById("mainNav");
+        const button = document.getElementById("menuToggle");
+
+        nav.classList.remove("open");
+        button.textContent = "☰";
+        button.setAttribute("aria-expanded", "false");
+    });
+});
+
+/* RADIO CONTROLS */
+
+const radioAudio = document.getElementById("radio-audio");
+const playerStatus = document.getElementById("playerStatus");
+
+radioAudio.volume = 1;
+
+function playRadio() {
+    playerStatus.textContent = "Connecting to 1Africa Radio TV...";
+
+    const result = radioAudio.play();
+
+    if (result && typeof result.then === "function") {
+        result.then(() => {
+            playerStatus.textContent =
+                "You are listening to 1Africa Radio TV live.";
+        }).catch(error => {
+            console.error("Radio playback error:", error);
+
+            playerStatus.textContent =
+                "Unable to start the broadcast. Check your internet connection and try again.";
+        });
+    }
+}
+
+function stopRadio() {
+    radioAudio.pause();
+    playerStatus.textContent = "Broadcast paused.";
+}
+
+function adjustVolume(value) {
+    radioAudio.volume = Math.max(0, Math.min(1, Number(value)));
+}
+
+radioAudio.addEventListener("playing", () => {
+    playerStatus.textContent =
+        "You are listening to 1Africa Radio TV live.";
+});
+
+radioAudio.addEventListener("waiting", () => {
+    playerStatus.textContent = "Connecting to the live broadcast...";
+});
+
+radioAudio.addEventListener("error", () => {
+    playerStatus.textContent =
+        "The stream could not be loaded. Please try again later.";
+});
+
+/* RADIO RECORDING CONTROLS */
+
+const recordButton = document.getElementById("recordButton");
+const stopRecordingButton = document.getElementById("stopRecordingButton");
+const recordingStatus = document.getElementById("recordingStatus");
+const savedRecordingsContainer = document.getElementById("savedRecordings");
+
+/*
+ * These controls communicate with the native Android application.
+ * The Android project must implement the AndroidRadioRecorder JavaScript
+ * interface and its startRecording, stopRecording and openRecordings methods.
+ *
+ * The interface must capture the actual radio stream, not the microphone.
+ */
+
+function startRadioRecording() {
+    if (!window.AndroidRadioRecorder ||
+        typeof window.AndroidRadioRecorder.startRecording !== "function") {
+
+        recordingStatus.textContent =
+            "Recording requires the Android recording feature.";
+
+        return;
+    }
+
+    if (radioAudio.paused) {
+        recordingStatus.textContent =
+            "Please start the live radio before recording.";
+
+        return;
+    }
+
+    recordButton.disabled = true;
+    stopRecordingButton.disabled = false;
+
+    recordingStatus.textContent = "Starting radio recording...";
+
+    try {
+        window.AndroidRadioRecorder.startRecording();
+    } catch (error) {
+        console.error("Recording start error:", error);
+
+        recordButton.disabled = false;
+        stopRecordingButton.disabled = true;
+
+        recordingStatus.textContent =
+            "Unable to start recording.";
+    }
+}
+
+function stopRadioRecording() {
+    if (!window.AndroidRadioRecorder ||
+        typeof window.AndroidRadioRecorder.stopRecording !== "function") {
+
+        recordingStatus.textContent =
+            "The Android recording feature is unavailable.";
+
+        return;
+    }
+
+    stopRecordingButton.disabled = true;
+
+    recordingStatus.textContent = "Stopping recording...";
+
+    try {
+        window.AndroidRadioRecorder.stopRecording();
+    } catch (error) {
+        console.error("Recording stop error:", error);
+
+        stopRecordingButton.disabled = false;
+
+        recordingStatus.textContent =
+            "Unable to stop recording.";
+    }
+}
+
+function openSavedRecordings() {
+    if (!window.AndroidRadioRecorder ||
+        typeof window.AndroidRadioRecorder.openRecordings !== "function") {
+
+        recordingStatus.textContent =
+            "Saved recordings require the Android recording feature.";
+
+        return;
+    }
+
+    try {
+        window.AndroidRadioRecorder.openRecordings();
+    } catch (error) {
+        console.error("Open recordings error:", error);
+
+        recordingStatus.textContent =
+            "Unable to open saved recordings.";
+    }
+}
+
+/*
+ * Android can call these functions after the native recording operation
+ * succeeds or fails.
+ */
+
+function onRadioRecordingStarted() {
+    recordButton.disabled = true;
+    stopRecordingButton.disabled = false;
+
+    recordingStatus.textContent = "Recording live radio.";
+}
+
+function onRadioRecordingStopped(message) {
+    recordButton.disabled = false;
+    stopRecordingButton.disabled = true;
+
+    recordingStatus.textContent =
+        message || "Recording saved.";
+}
+
+function onRadioRecordingError(message) {
+    recordButton.disabled = false;
+    stopRecordingButton.disabled = true;
+
+    recordingStatus.textContent =
+        message || "Recording failed.";
+}
+
+function onRadioRecordingSaved(name, url) {
+    if (!url) {
+        recordingStatus.textContent =
+            "Recording finished, but no playable recording was provided.";
+
+        return;
+    }
+
+    savedRecordingsContainer.hidden = false;
+
+    const item = document.createElement("div");
+    item.className = "saved-recording";
+
+    const title = document.createElement("div");
+    title.textContent = name || "Radio Recording";
+
+    const player = document.createElement("audio");
+    player.controls = true;
+    player.preload = "none";
+    player.src = url;
+
+    const download = document.createElement("a");
+    download.href = url;
+    download.download = name || "1Africa-Radio-Recording.mp3";
+    download.textContent = "Save Recording";
+
+    item.appendChild(title);
+    item.appendChild(player);
+    item.appendChild(download);
+
+    savedRecordingsContainer.appendChild(item);
+    savedRecordingsContainer.hidden = false;
+
+    recordingStatus.textContent = "Recording saved.";
+}
+
+/* EXISTING PRESENTER IMAGE MAPPINGS */
+
+const hostImages = {
+    "Nontokozo Vee": "https://i.postimg.cc/6qtvBbGW/IMG-20250824-WA0067.jpg",
+    "Ntombi": "https://i.postimg.cc/fRmqmjWZ/IMG-20250827-WA0053.jpg",
+    "Zoleka": "https://i.postimg.cc/YSsvYFgw/IMG-20250824-WA0025.jpg",
+    "Kagiso Rakosa": "https://i.postimg.cc/HnqjVJfY/IMG-20250824-WA0081.jpg",
+    "Nash": "https://i.postimg.cc/HkyZXSLV/IMG-20250828-WA0001-1.jpg",
+    "Thato Galo": "https://i.postimg.cc/TwhsCQPP/IMG-20250709-WA0008.jpg",
+    "Tsegofatso Vilakazi": "https://i.postimg.cc/kMVWZJ0h/file-00000000652061f5a913dd0a3e9a0b71.png",
+    "Nopasika Booi": "https://i.postimg.cc/yYGmJqJ0/IMG-20251009-WA0007.jpg",
+    "Lebogang Mokadi": "https://i.postimg.cc/BZRv5VvX/IMG-20250824-WA0061.jpg",
+    "Pear Ndlovu": "https://i.postimg.cc/d0QpMkLp/IMG-20250824-WA0034.jpg",
+    "Mbali Ntuli": "https://i.postimg.cc/bYG3YpSK/IMG-20250828-WA0003.jpg",
+    "Quing Torch": "https://i.postimg.cc/pVnswb4k/IMG-20250827-WA0051.jpg",
+    "Samkelo": "https://i.postimg.cc/m2XF3K79/IMG-20250824-WA0032.jpg",
+    "Thami UrbanS Jayiya": "https://i.postimg.cc/NfL0RwYh/IMG-20250824-WA0064.jpg",
+    "Africa Mdakane": "https://i.postimg.cc/NM5gm6q6/IMG-20250824-WA0060.jpg",
+    "Nhlanhla Ndlovu": "https://i.postimg.cc/PqVZzQcK/IMG-20250824-WA0045.jpg",
+    "Budman 6": "https://i.postimg.cc/Y2d6pk8T/IMG-20250824-WA0049.jpg",
+    "Athi Ntshwanti": "https://i.postimg.cc/6qgsh9cq/IMG-20250824-WA0012.jpg",
+    "Itumeleng Raliete": "https://i.postimg.cc/XvFRkSB7/IMG-20250824-WA0021.jpg",
+    "Chwayita": "https://i.postimg.cc/fLqJ799N/IMG-20250824-WA0026.jpg",
+    "Nosihle Mchunu": "https://i.postimg.cc/qvhNzBdC/IMG-20250825-WA0004.jpg",
+    "Fanafuthi": "https://i.postimg.cc/m2M77MTW/IMG-20250824-WA0046.jpg",
+    "Thama Actress": "https://i.postimg.cc/GhSDjHhp/IMG-20250827-WA0052.jpg",
+    "Kevin -Jay La Dess": "https://i.postimg.cc/HxcmtnBQ/IMG-20250824-WA0017.jpg",
+    "Panache Magwaza": "https://i.postimg.cc/FHKFpRhF/IMG-20250824-WA0022.jpg",
+    "Power Tini": "https://i.postimg.cc/j5CjcQTq/IMG-20250826-WA0062.jpg",
+    "Pinkie Lebogang": "https://i.postimg.cc/8kvDJFFG/IMG-20250824-WA0018.jpg",
+    "Mihlali Nojoko": "https://i.postimg.cc/BQvFRJgb/IMG-20250825-WA0031.jpg",
+    "Katlago Seipei": "https://i.postimg.cc/NF8Zq1kh/IMG-20250824-WA0030.jpg",
+    "Phillipine": "https://i.postimg.cc/FHKFpRhF/IMG-20250824-WA0022.jpg",
+    "Jabulisile": "https://i.postimg.cc/hjgjmz4M/IMG-20250824-WA0065.jpg",
+    "Ziphilele Mpayipheli": "https://i.postimg.cc/j2gqY0XY/IMG-20250825-WA0021.jpg",
+    "Fanton Paris": "https://i.postimg.cc/ncCqWHF2/IMG-20250824-WA0027.jpg",
+    "Aviwe Damane": "https://i.postimg.cc/VkcdwCq4/IMG-20250824-WA0050.jpg",
+    "Katlego Selogiwe": "https://i.postimg.cc/7hPymsSG/IMG-20250825-WA0022.jpg",
+    "Flow Cava": "https://i.postimg.cc/28TVSmMc/IMG-20250824-WA0056.jpg",
+    "Sfiso Khoza": "https://i.postimg.cc/VN4NRWGc/IMG-20250824-WA0019.jpg",
+    "Luthando Mfakadolo": "https://i.postimg.cc/tCwvSvj1/IMG-20250825-WA0026.jpg",
+    "Xolile Nzimandze": "https://i.postimg.cc/G2QkT1R8/IMG-20250824-WA0051.jpg",
+    "Thulani": "https://via.placeholder.com/50",
+    "Zimkhita Sibongile": "https://i.postimg.cc/fLGhd1vs/IMG-20250824-WA0058.jpg",
+    "Apostle Sthelo": "https://i.postimg.cc/qMpsrq8s/IMG-20250824-WA0068.jpg",
+    "Apostle Hamiton": "https://via.placeholder.com/50",
+    "Evangelist Easter Lungile Ninela": "https://i.postimg.cc/8zMfrVBp/IMG-20250824-WA0048.jpg",
+    "Funcle Sparkle": "https://i.postimg.cc/Y9KzDmbk/IMG-20250828-WA0006.jpg",
+    "Matshidiso Malope": "https://i.postimg.cc/BZTbJCgy/IMG-20250824-WA0073.jpg",
+    "Mandla Ndlovu": "https://i.postimg.cc/GtT4hmSx/IMG-20250825-WA0038.jpg",
+    "Khethiwe Kate": "https://i.postimg.cc/bwDHCMxW/IMG-20250824-WA0052.jpg",
+    "Sbusiso Ndlovu": "https://i.postimg.cc/WzxPKvYQ/IMG-20250824-WA0015.jpg",
+    "Sinenhlanhla Maling": "https://i.postimg.cc/Jzz5Mb5N/IMG-20250824-WA0033.jpg",
+    "Mata Mashila": "https://i.postimg.cc/N0DypjrD/IMG-20250709-WA0007.jpg",
+    "Busisiwe": "https://i.postimg.cc/HWRZyWBY/IMG-20260814-WA0004.jpg",
+    "Shekwendray": "https://i.postimg.cc/cCQG1qZb/IMG-20250825-WA0028.jpg",
+    "Themba Yimba": "https://i.postimg.cc/HnzBmynN/IMG-20250824-WA0055.jpg",
+    "Bishops Zweli": "https://i.postimg.cc/HxJ18c0R/IMG-20250824-WA0014.jpg",
+    "Samkelo Mthembu": "https://i.postimg.cc/m2XF3K79/IMG-20250824-WA0032.jpg",
+    "Regaugetswe Makgoba": "https://i.postimg.cc/c19fJ2rr/IMG-20250920-WA0002.jpg",
+
+    "Michael “Darxkin” Mabena": "IMG-20260813-WA0002.jpg",
+    "Xolelwa Buthelezi": "IMG-20260813-WA0003.jpg",
+    "Pranitha Araba Eshun Araujo": "IMG-20260813-WA0004.jpg",
+    "Nasiphi Mazwai": "IMG-20260813-WA0005.jpg",
+    "Oratile Selepe": "IMG-20260813-WA0006.jpg",
+    "Phindile Khanyile": "IMG-20260813-WA0007.jpg",
+    "Yvonne Veronica Maseko": "IMG-20260813-WA0008.jpg",
+    "Noluvuyo Madiba": "IMG-20260813-WA0009.jpg",
+    "Phindile Khalo": "IMG-20260813-WA0010.jpg",
+    "MS Labani Mgimeti": "IMG-20260813-WA0011.jpg",
+    "Nomthandazo (Nom 'T)": "IMG-20260813-WA0012.jpg",
+    "Asanda Magudulela": "IMG-20260813-WA0013.jpg",
+    "Minister Nompumelelo": "IMG-20260813-WA0014.jpg",
+    "Minister Pontsho Sama": "IMG-20260813-WA0015.jpg",
+    "Pastor Refiloe Mongana": "https://i.postimg.cc/d0rrbvJz/IMG-20260121-WA0053.jpg",
+    "Musawenkosi Makhanya": "IMG-20260813-WA0017.jpg",
+    "Ntokozo Mahlangu": "IMG-20260813-WA0018.jpg",
+    "Nelufhangani Mulalo": "IMG-20260813-WA0019.jpg",
+    "Tebogo Welcome Madonsela": "IMG-20260813-WA0020.jpg",
+    "MOLOI KUTKWANA RELEBOGILE": "IMG-20260813-WA0022.jpg",
+    "Lebohang Thobatsi": "IMG-20260813-WA0023.jpg",
+    "Phumlani Khoza": "IMG-20260813-WA0024.jpg",
+    "Phumzwa Mathe": "IMG-20260813-WA0025.jpg",
+    "IKAGENG NYEDIMANE": "IMG-20260813-WA0026.jpg",
+    "Giovanni Phosa": "IMG-20260813-WA0027.jpg",
+    "Brandon Moletsane Rampai": "https://i.postimg.cc/Cdp0m3Tc/IMG-20260813-WA0028.jpg",
+    "Katleho Mhangwane": "IMG-20260813-WA0030.jpg",
+    "Siya Ndaba": "IMG-20260813-WA0031.jpg",
+    "MRS Mpho Aidoo": "IMG-20260813-WA0032.jpg",
+    "KOKETSO SANNAH NTHAU": "IMG-20260813-WA0033.jpg",
+    "Ambassador Ntimbwe Mpamba": "IMG-20260813-WA0034.jpg",
+    "Hlahla Nyingwa": "IMG-20260813-WA0035.jpg",
+    "Sherilee Deenkebogeale": "IMG-20260813-WA0036.jpg",
+    "Matshediso Mahlaku": "https://i.postimg.cc/8CqfTCLZ/IMG-20251006-WA0018.jpg",
+    "Thato Phala": "https://i.postimg.cc/DwN8czp2/IMG-20251006-WA0019.jpg",
+    "Mbulungelo Lungie": "https://i.postimg.cc/VLLvQt27/IMG-20251006-WA0020.jpg",
+    "Satara Rosa": "https://i.postimg.cc/1tQRWVGP/IMG-20251006-WA0001.jpg",
+    "Kevin Babsy (M15 Kiven)": "https://i.postimg.cc/Nj2gBkDD/IMG-20251006-WA0002.jpg",
+    "Busisiwe Masemola": "https://i.postimg.cc/vB0RW4Xh/IMG-20251006-WA0003.jpg",
+    "Temoso Phiri": "https://i.postimg.cc/m2zxH29N/IMG-20251006-WA0004.jpg",
+    "Koapeng Tumelo": "https://i.postimg.cc/HxsRspHg/IMG-20251006-WA0007.jpg",
+    "Charmaine Ndlela": "https://i.postimg.cc/90DkZJD0/IMG-20251006-WA0006.jpg",
+    "Siyavuua Giumehlo": "https://i.postimg.cc/wvGfqL0c/IMG-20251006-WA0005.jpg",
+    "MC Megacy": "https://i.postimg.cc/8zbV1XM8/IMG-20251007-WA0006.jpg",
+    "Brother Mike Osarfo": "https://i.postimg.cc/8cw3JC2M/IMG-20250706-WA0003.jpg",
+    "Angel Gogushe": "https://i.postimg.cc/T1wm9qHd/IMG-20250920-WA0003.jpg",
+    "Bokao Sehume": "https://i.postimg.cc/mkW7MM03/IMG-20251028-WA0004.jpg",
+    "Sithembiso Sithole": "https://i.postimg.cc/5Nb7p7qS/IMG-20260121-WA0049.jpg",
+    "Thapelo Mamabolo": "https://i.postimg.cc/GtQjZRxC/IMG-20260121-WA0050.jpg",
+    "Reign Mfumu King": "https://i.postimg.cc/1t00qSTN/IMG-20260121-WA0051.jpg",
+    "Chadya Tapiwe Diamond": "https://i.postimg.cc/NfC6TpN2/IMG-20260121-WA0052.jpg",
+    "Thulani Msibi": "https://i.postimg.cc/65qR9C93/IMG-20260121-WA0054.jpg",
+    "Thabiso Tseko": "https://i.postimg.cc/R07JPRTg/IMG-20260121-WA0055.jpg",
+    "Kamogelo Sithole": "https://i.postimg.cc/RhDW3bMw/IMG-20260121-WA0056.jpg",
+    "Adila Perumal": "https://i.postimg.cc/3xpkRBzQ/IMG-20260121-WA0057.jpg"
+};
+
+/* SHOW SCHEDULE */
+
+function timeToMinutes(value) {
+    const str = value.toLowerCase().replace(/\s/g, "");
+
+    let hour;
+    let minute = 0;
+
+    if (str.includes("am") || str.includes("pm")) {
+        const isPM = str.includes("pm");
+        const cleaned = str.replace("am", "").replace("pm", "");
+        const parts = cleaned.split(":");
+
+        hour = parseInt(parts[0], 10);
+        minute = parts.length > 1 ? parseInt(parts[1], 10) : 0;
+
+        if (hour === 12) {
+            hour = isPM ? 12 : 0;
+        } else if (isPM) {
+            hour += 12;
+        }
+    } else {
+        const parts = str.split(":");
+
+        hour = parseInt(parts[0], 10);
+        minute = parts.length > 1 ? parseInt(parts[1], 10) : 0;
+    }
+
+    return hour * 60 + minute;
+}
+
+function parseTimeRange(range) {
+    const parts = range.split("-");
+
+    return [
+        timeToMinutes(parts[0].trim()),
+        timeToMinutes(parts[1].trim())
+    ];
+}
+
+function getCurrentTime() {
+    const now = new Date();
+
+    const dayMap = [
+        "Sunday", "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday"
+    ];
+
+    return {
+        dayFull: dayMap[now.getDay()],
+        minutes: now.getHours() * 60 + now.getMinutes(),
+        date: now.getDate()
+    };
+}
+
+function getWeekName(date) {
+    const weekNumber = Math.ceil(date / 7);
+
+    if (date >= 29) return "Last";
+
+    const names = ["First", "Second", "Third", "Fourth"];
+
+    return names[weekNumber - 1] || "Fourth";
+}
+
+const shows = [
+    {
+        title: "Good Morning Africa Breakfast Show",
+        hosts: ["Ntombifuthi Mthembu"],
+        cohosts: ["Lebohang Thobatsi"],
+        time: "06:00-09:00",
+        days: ["Monday", "Tuesday"]
+    },
+    {
+        title: "Afro Brunch",
+        hosts: ["Nzwakazi Geleba"],
+        cohosts: ["Asanda Magudulela", "Oratile Selepe"],
+        time: "09:00-12:00",
+        days: ["Monday", "Tuesday"]
+    },
+    {
+        title: "Lunchtime Express",
+        hosts: ["Rea Makgobo"],
+        cohosts: ["Xolelwa Buthelezi", "Moloi Kutkwana Relebogile"],
+        time: "12:00-15:00",
+        days: ["Monday", "Tuesday"]
+    },
+    {
+        title: "1Africa Drive",
+        hosts: ["Brandon Moletsane Rampai"],
+        cohosts: ["Hlahla Nyingwa"],
+        time: "15:00-18:00",
+        days: ["Monday", "Tuesday"]
+    },
+    {
+        title: "Good Morning Africa Breakfast Show",
+        hosts: ["Kagiso Rakosa"],
+        cohosts: ["Yvonne Veronica Maseko", "Pranitha Araba Eshun"],
+        time: "06:00-09:00",
+        days: ["Wednesday", "Thursday", "Friday"]
+    },
+    {
+        title: "Afro Brunch",
+        hosts: ["Nelufhangani Mulalo"],
+        cohosts: ["Ntokozo Mahlangu", "Phindile Khalo"],
+        time: "09:00-12:00",
+        days: ["Wednesday", "Thursday", "Friday"]
+    },
+    {
+        title: "Lunchtime Express",
+        hosts: ["Lebogang Magotsi"],
+        cohosts: ["Phumzwa Mathe", "Katleho Mhangwane", "Phindile Khanyile"],
+        time: "12:00-15:00",
+        days: ["Wednesday", "Thursday"]
+    },
+    {
+        title: "1Africa Drive",
+        hosts: ["Mbali Ntuli"],
+        cohosts: ["Koketso Sannah Nthau"],
+        time: "15:00-18:00",
+        days: ["Wednesday", "Thursday", "Friday"]
+    },
+    {
+        title: "Camico June 30th and Beyond",
+        hosts: ["Nomthandazo Dladla", "Siya Ndaba"],
+        cohosts: [],
+        time: "18:00-20:00",
+        days: ["Wednesday", "Thursday", "Friday"]
+    },
+    {
+        title: "Turn On Turn Off",
+        hosts: ["Mpho Ncholo (Taded)"],
+        cohosts: ["Michael Darxkin Mabena", "Sherilee Deenkebogeale"],
+        time: "18:00-20:00",
+        days: ["Friday"]
+    },
+    {
+        title: "Good Morning Africa Breakfast Cruise",
+        hosts: ["Philippine (Stufuza)"],
+        cohosts: ["Jabulisile Shongwe", "Matshedisi Mahlaku", "Mpho Ncholo"],
+        time: "06:00-09:00",
+        days: ["Saturday"]
+    },
+    {
+        title: "MO'FYAH",
+        hosts: ["Bobotikal"],
+        cohosts: [],
+        time: "09:00-11:00",
+        days: ["Saturday"],
+        weeks: ["First", "Last"]
+    },
+    {
+        title: "Gospel Net",
+        hosts: ["Ambassador Ntimbwe Mpamba", "Ms Labani Mgimeti"],
+        cohosts: [],
+        time: "09:00-11:00",
+        days: ["Saturday"],
+        weeks: ["Second", "Third"]
+    },
+    {
+        title: "Sound Wave Saturday",
+        hosts: ["Jay La Dess"],
+        cohosts: ["Panache Magwaza"],
+        time: "11:00-13:00",
+        days: ["Saturday"]
+    },
+    {
+        title: "Africa Top 40",
+        hosts: ["Flow Cava"],
+        cohosts: ["Luthando Mfakadolo", "Nasiphi Mazwai", "Tebogo Welcome Madonsela"],
+        time: "13:00-16:00",
+        days: ["Saturday"]
+    },
+    {
+        title: "Qhude Manikiniki",
+        hosts: ["Xolile Ndzimandze"],
+        cohosts: ["Phumlani Khoza", "Phumzwa Mathe", "Musawenkosi Makhanya"],
+        time: "16:00-18:00",
+        days: ["Saturday"]
+    },
+    {
+        title: "Unbreakable",
+        hosts: ["Minister Pontsho Sama"],
+        cohosts: [],
+        time: "06:00-08:00",
+        days: ["Sunday"],
+        weeks: ["First", "Second"]
+    },
+    {
+        title: "Break the Chain",
+        hosts: ["Pastor Refiloe Mongana"],
+        cohosts: [],
+        time: "06:00-09:00",
+        days: ["Sunday"],
+        weeks: ["Third", "Last"]
+    },
+    {
+        title: "Proudly African",
+        hosts: ["Othalive Kairo Gcani"],
+        cohosts: [],
+        time: "08:00-09:00",
+        days: ["Sunday"]
+    },
+    {
+        title: "Inspirational Sunday",
+        hosts: ["Adila Perumal"],
+        cohosts: ["Giovanni Phosa"],
+        time: "09:00-12:00",
+        days: ["Sunday"]
+    },
+    {
+        title: "Soulful Sunday",
+        hosts: ["Khethiwe Kate"],
+        cohosts: ["Busisiwe", "Dakalo Angel Davhula"],
+        time: "12:00-15:00",
+        days: ["Sunday"]
+    },
+    {
+        title: "Africa Bliss",
+        hosts: ["Nqobile Mabizela"],
+        cohosts: ["Ikageng Nyedimane", "Noluvuyo Madiba"],
+        time: "15:00-18:00",
+        days: ["Sunday"]
+    },
+    {
+        title: "The Power of the Cross ✝️",
+        hosts: ["Bishops Zweli"],
+        cohosts: [],
+        time: "18:00-20:00",
+        days: ["Sunday"]
+    }
+];
+
+/* HELPERS */
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+function getImagePath(name) {
+    const image = hostImages[name];
+
+    if (!image) return "";
+
+    return image;
+}
+
+function renderHostImages(hosts) {
+    if (!hosts || hosts.length === 0) {
+        return "";
+    }
+
+    return hosts.map(name => {
+        const image = getImagePath(name);
+
+        return `
+            <div class="mini-host">
+                ${image ? `
+                    <img
+                        src="${escapeHTML(image)}"
+                        alt="${escapeHTML(name)}"
+                        onerror="this.style.display='none'">
+                ` : ""}
+                <span>${escapeHTML(name)}</span>
+            </div>
+        `;
+    }).join("");
+}
+
+/* DETERMINE WHICH SHOW IS LIVE */
+
+function showIsActive(show, now) {
+    if (!show.days.includes(now.dayFull)) return false;
+
+    if (show.weeks && !show.weeks.includes(getWeekName(now.date))) {
+        return false;
+    }
+
+    const [start, end] = parseTimeRange(show.time);
+
+    return now.minutes >= start && now.minutes < end;
+}
+
+function getActiveShows(now) {
+    return shows.filter(show => showIsActive(show, now));
+}
+
+function getNextShow(now) {
+    const candidates = shows
+        .filter(show => {
+            if (!show.days.includes(now.dayFull)) return false;
+
+            if (show.weeks && !show.weeks.includes(getWeekName(now.date))) {
+                return false;
+            }
+
+            const [start] = parseTimeRange(show.time);
+
+            return start > now.minutes;
+        })
+        .sort((a, b) => parseTimeRange(a.time)[0] - parseTimeRange(b.time)[0]);
+
+    return candidates[0] || null;
+}
+
+/* RENDER SCHEDULE */
+
+function renderSchedule() {
+    const now = getCurrentTime();
+    const container = document.getElementById("schedule");
+
+    container.innerHTML = shows.map(show => {
+        const isLive = showIsActive(show, now);
+        const hosts = [...show.hosts, ...show.cohosts];
+
+        return `
+            <article class="schedule-card ${isLive ? "live" : ""}">
+                ${isLive ? '<span class="live-label">● LIVE NOW</span>' : ""}
+                <div class="show-title">${escapeHTML(show.title)}</div>
+                <div><strong>Presenter:</strong> ${escapeHTML(show.hosts.join(", "))}</div>
+                ${show.cohosts.length
+                    ? `<div><strong>Co-hosts:</strong> ${escapeHTML(show.cohosts.join(", "))}</div>`
+                    : ""}
+                <div><strong>Time:</strong> ${escapeHTML(show.time)}</div>
+                <div><strong>Days:</strong> ${escapeHTML(show.days.join(", "))}</div>
+                ${show.weeks
+                    ? `<div><strong>Weeks:</strong> ${escapeHTML(show.weeks.join(", "))}</div>`
+                    : ""}
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+                    ${hosts.map(name => {
+                        const image = getImagePath(name);
+
+                        return image
+                            ? `<img
+                                src="${escapeHTML(image)}"
+                                alt="${escapeHTML(name)}"
+                                title="${escapeHTML(name)}"
+                                onerror="this.style.display='none'"
+                                style="width:30px;height:30px;object-fit:cover;border-radius:50%;border:1px solid var(--gold);">`
+                            : "";
+                    }).join("")}
+                </div>
+            </article>
+        `;
+    }).join("");
+
+    const active = getActiveShows(now);
+    const next = getNextShow(now);
+
+    const nowTitle = document.getElementById("now-title");
+    const nowHosts = document.getElementById("now-hosts");
+    const nowMeta = document.getElementById("now-meta");
+
+    if (active.length) {
+        nowTitle.textContent = active.map(show => show.title).join(" / ");
+
+        const people = [
+            ...new Set(active.flatMap(show => [...show.hosts, ...show.cohosts]))
+        ];
+
+        nowHosts.innerHTML = renderHostImages(people);
+        nowMeta.textContent = "Scheduled live programme";
+    } else {
+        nowTitle.textContent = "Africa Good Music";
+        nowHosts.innerHTML = "";
+        nowMeta.textContent = "Music and entertainment from across Africa";
+    }
+
+    document.getElementById("next-title").textContent = next
+        ? `${next.title} (${next.time})`
+        : "Africa Good Music";
+}
+
+/* CLOCK */
+
+function updateClock() {
+    const now = new Date();
+
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    document.getElementById("digital-clock").textContent =
+        `${hours}:${minutes}:${seconds}`;
+}
+
+/* INITIALISE */
+
+function refreshPageData() {
+    updateClock();
+    renderSchedule();
+}
+
+refreshPageData();
+
+setInterval(refreshPageData, 15000);
+</script>
+
+</body>
+</html>
